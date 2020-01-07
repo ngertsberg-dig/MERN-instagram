@@ -1,0 +1,4 @@
+bcrypt sign up passwords
+refactor <App>... way too much code in it
+Image uploads with cloudinary
+Make a not ugly design :P

@@ -19,9 +19,11 @@ const HeaderNav =  (props) =>{
             <div className = 'user-header'>
                 {user == null ? <LoginScreen LoginUser = {props.LoginUser} RegisterUser = {props.RegisterUser} /> : <UserLogged user = {user} logout = {props.logout} />}
             </div>
-            <div className = 'navigation'>
-                <Navigation />
-            </div>
+            {user == null? null :
+                <div className = 'navigation'>
+                    <Navigation />
+                </div>
+            }
         </div>
     )
 }

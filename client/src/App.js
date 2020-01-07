@@ -13,6 +13,11 @@ class App extends React.Component {
     this.state = {
       user: null
     }
+
+    // this.state={
+    //   user: {"following":[{"_id":"5e14f48e9421bd2299e2e6fe"}],"_id":"5e14f1f9fead0c220f2a006d","name":"nickey22","email":"gertsberg@hotmail.com","password":"gunit2","__v":5}
+    // }
+
     this.logoutUser = this.logoutUser.bind(this);
   }
   async registerUser(e){
@@ -113,7 +118,7 @@ class App extends React.Component {
       <div id = "App" className="App">
         <Router>
           <HeaderNav LoginUser = {(e)=>this.loginUser(e)} RegisterUser = {(e)=>this.registerUser(e)} user = {this.state.user} logout = {this.logoutUser} />
-          <Pages />
+          <Pages state = {this.state}/>
           <Notification />
         </Router>
       </div>
