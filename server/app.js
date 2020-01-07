@@ -3,9 +3,8 @@ const app = require("express")();
 const session = require("express-session");
 const mongoose = require("mongoose");
 const mongodb = require("mongodb");
+const cookieParser = require("cookie-parser");
 const PORT = process.env.port || 8080;
-
-const User = require("./models/usersModels");
 
 const UserRoutes = require("./routes/userRoutes");
 
@@ -16,7 +15,18 @@ mongoose.connect('mongodb://nickey22:gunit2@ds259878.mlab.com:59878/user-login',
 
 app.use(express.urlencoded({ extended:true }));
 app.use(express.json());
-app.use(session({secret:"dsf7nh329n"}));
+app.use(cookieParser());
+
+app.use(session({
+    secret:"shhh",
+    key:"user_sid",
+    resave:false,
+    saveUninitialized: false,
+    cookie:{
+        expires: 60000 * 60
+    }
+}));
+
 app.use("/api/user/",UserRoutes);
 
 

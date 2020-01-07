@@ -1,0 +1,22 @@
+$notWidth: 400px
+$error: #ac0909
+$errorBorder: 1px solid #ff1b1b
+$success: #07b301
+$successBorder: 1px solid #26ff1e
+#notification
+    position: fixed
+    bottom: 20px
+    width: $notWidth
+    border-radius: 5px
+    left: calc(50% - (#{$notWidth} / 2))
+    color: white
+    display: none
+    z-index: 99999999
+    p
+    
+    &.error
+        background-color: $error
+        border: $errorBorder
+    &.success
+        background-color: $success
+        border: $successBorder
