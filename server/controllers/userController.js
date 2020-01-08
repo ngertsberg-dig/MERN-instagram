@@ -1,4 +1,12 @@
 const User = require("../models/usersModels");
+const cloudinary = require('cloudinary').v2;
+const path = require("path");
+
+cloudinary.config({ 
+    cloud_name: 'dfm327szl', 
+    api_key: '919975629572391', 
+    api_secret: 'yWllDVoR4vjzT49ecF3w7fp1OaM' 
+});
 
 exports.signUpUser = (req,res,next) =>{
     const { name } = req.body.FormValues;
@@ -65,14 +73,14 @@ exports.addFollowing = (req,res)=>{
             if(!alreadyFollowing){
                 user.following.push({ _id: followingUserId });
                 user.save();
-                res.json({message:"User Followed!",type:"success"});
+                res.json({message:"User Followed!",type:"success",success:true});
             }
             else{
-                res.json({message:"Already following User!",type:"error"})
+                res.json({message:"Already following User!",type:"error",success:false})
             }
         }
         else{
-            res.json({message:"Failed to find current user!",type:"error"})
+            res.json({message:"Failed to find current user!",type:"error",success:false})
         }
     })
 }
@@ -87,14 +95,14 @@ exports.removeFollowing = (req,res) => {
                 var newFollowingList = user.following.filter(el=>el._id != followingUserId);
                 user.following = newFollowingList;
                 user.save();
-                res.json({message:"User unfollowed!",type:"success"});
+                res.json({message:"User unfollowed!",type:"success",success:true});
             }
             else{
-                res.json({message:"Not following User!",type:"error"})
+                res.json({message:"Not following User!",type:"error",success:false})
             }
         }
         else{
-            res.json({message:"Failed to find current user!",type:"error"})
+            res.json({message:"Failed to find current user!",type:"error",success:false})
         }
     })
 }
@@ -107,4 +115,9 @@ exports.getAllUserFollowing = (req,res) =>{
         const currentUserFollowers = user.find(el=>el._id == currentUser).following;
         res.json({ userListExcludeCurrent, currentUserFollowers });
     })
+}
+
+exports.uploadProfileImage = (req,res)=>{
+    res.json({path:process.cwd()})
+    cloudinary.uploader.upload(`${process.cwd()}/server/images/avatar.png`, function(error, result) {console.log(result, error)});
 }

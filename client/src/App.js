@@ -1,12 +1,12 @@
 import React from 'react';
-import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
+import {BrowserRouter as Router} from 'react-router-dom';
 import './App.css';
 import './App.sass';
 import HeaderNav from './components/HeaderNav/HeaderNav';
 import Notification from './components/Notification/Notification';
-import TweenMax from 'gsap';
-import { Power1 } from 'gsap/gsap-core';
 import Pages from './components/Pages/Pages';
+import { notificationPopup } from './helpers/helper';
+
 class App extends React.Component {
   constructor(){
     super();
@@ -14,9 +14,9 @@ class App extends React.Component {
       user: null
     }
 
-    // this.state={
-    //   user: {"following":[{"_id":"5e14f48e9421bd2299e2e6fe"}],"_id":"5e14f1f9fead0c220f2a006d","name":"nickey22","email":"gertsberg@hotmail.com","password":"gunit2","__v":5}
-    // }
+    this.state={
+      user: {"following":[{"_id":"5e14f48e9421bd2299e2e6fe"}],"_id":"5e14f1f9fead0c220f2a006d","name":"nickey22","email":"gertsberg@hotmail.com","password":"gunit2","__v":5}
+    }
 
     this.logoutUser = this.logoutUser.bind(this);
   }
@@ -34,10 +34,10 @@ class App extends React.Component {
       })
     const json = await res.json();
     if(res.status === 401){
-      this.notificationPopup("error",json);
+      notificationPopup("error",json);
     }
     else{
-      this.notificationPopup("success",json);
+      notificationPopup("success",json);
     }
   }
 
@@ -53,7 +53,7 @@ class App extends React.Component {
       body:JSON.stringify({ name:FormDat.get("name"), password:FormDat.get("password") })
       })
     const json = await res.json();
-    this.notificationPopup(json.type,json.message);
+    notificationPopup(json.type,json.message);
     if(json.type === 'success'){
       document.querySelectorAll(".modal").forEach(function(modal){
         if(modal.classList.contains("active")){
@@ -68,7 +68,7 @@ class App extends React.Component {
     const res = await fetch("/api/user/logout");
     const data = await res.json();
     if(data.success){
-      this.notificationPopup("success",data.message);
+      notificationPopup("success",data.message);
       this.setState({
         user: null
       })
@@ -88,31 +88,7 @@ class App extends React.Component {
     }
   }
   
-  notificationPopup(status,message){
-    const notification = document.querySelector("#notification");
-    if(!notification.classList.contains("active")){
-      notification.classList.add(status,"active");
-      notification.querySelector("p").textContent = message;
-      
-      TweenMax.set(notification,{display:"block"});
-      TweenMax.from(notification,0.25,{opacity:0,y:200,ease:Power1.easeOut,onComplete:function(){
-        TweenMax.to(notification,0.25,{opacity:0,y:100,delay:1,onComplete:function(){
-          TweenMax.set(notification,{display:"none",y:0,opacity:1});
-          notification.classList.remove("active",status);
-        }})
-      }});
-    }
-    else{
-      const keepChecking = setInterval(()=>{
-        const checkClass = document.querySelector("#notification").classList.contains("active");
-        console.log(checkClass);
-        if(!checkClass){
-          clearInterval(keepChecking);
-          this.notificationPopup(status,message);
-        }
-      },1000);
-    }
-  }
+
   render(){
     return (
       <div id = "App" className="App">

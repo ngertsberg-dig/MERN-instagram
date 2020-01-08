@@ -36,7 +36,7 @@ class Users extends React.Component{
                 userList = null;
             }
             else{
-                userList = <UserList userFollowingList = {this.state.userFollowingList} />
+                userList = <UserList currentUser = {this.state.user} userFollowingList = {this.state.userFollowingList} />
             }
         }
         return(
