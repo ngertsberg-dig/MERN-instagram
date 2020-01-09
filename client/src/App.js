@@ -90,7 +90,7 @@ class App extends React.Component {
   changeUserProfilePicState(newPic){
     if(this.state.user){
       const newUserObject = this.state.user;
-      newUserObject.profilePic = newPic;
+      newUserObject.profilePic = {url:newPic};
       console.log(newUserObject);
       this.setState({
         user: newUserObject

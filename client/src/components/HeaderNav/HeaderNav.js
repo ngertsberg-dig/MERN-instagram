@@ -58,7 +58,7 @@ const UserLogged = (props) =>{
         <div className = 'user-logged-in'>
             <div className = 'left-side'>
                 <div className = 'profile-pic'>
-                    <img onClick = {profilePicCropActivate} src = {user.profilePic} alt = 'profile-pic'/>
+                    <img onClick = {profilePicCropActivate} src = {user.profilePic.url} alt = 'profile-pic'/>
                 </div>
             </div>
             <div className = 'right-side'>

@@ -105,6 +105,7 @@ class ProfilePicCrop extends React.Component{
             const data = await res.json();
             if(data.success){
               this.props.changeUserPic(data.image);
+              console.log(data.image);
               document.querySelector(".modal.modal-change-profile-pic.active").classList.remove("active");
               notificationPopup(data.type,data.message);
             }

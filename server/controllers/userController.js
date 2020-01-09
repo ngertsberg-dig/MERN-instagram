@@ -25,7 +25,7 @@ exports.signUpUser = (req,res,next) =>{
 exports.saveUserIntoDB = (req,res) => {
     const defaultProfilePicLink = "https://res.cloudinary.com/dfm327szl/image/upload/v1578528727/Default%20Images/user_dkmmxa.png";
     const { name, email, password } = req.body.FormValues;
-    const newUser = new User({name,email,password,profilePic:defaultProfilePicLink});
+    const newUser = new User({name,email,password,profilePic:{url:defaultProfilePicLink,public_id:0}});
     newUser.save().then(()=>{
         res.status(200);
         res.json("User created successfully")
@@ -49,8 +49,6 @@ exports.loginValidation = (req,res) =>{
 }
 
 exports.checkIfLogged = (req,res) =>{
-
-
     if(req.session.user == undefined){
         res.json({message:"No user logged",success:false});
     }
@@ -133,6 +131,8 @@ exports.uploadProfileImage = (req,res,next)=>{
     cloudinary.uploader.upload(profilePic, function(error, result) {
         if(!error){
             req.body.newProfilePicURL = result.url;
+            req.body.publicID = result.public_id;
+            req.body.profilePic = "";
             next();
         }else{
             console.log("failed to upload");
@@ -142,14 +142,21 @@ exports.uploadProfileImage = (req,res,next)=>{
 }
 
 exports.changeProfilePic = (req,res) =>{
-    console.log(req.body);
-    console.log("saving image into DB");
     const { userID } = req.body;
     User.findOne({_id: userID},(err,user)=>{
         if(err) throw err;
         if(user != null){
+            //remove old data
+            const oldImage = user.profilePic.public_id;
+            if(parseInt(oldImage) != 0){
+                console.log('destroying old image..');
+                cloudinary.uploader.destroy(oldImage, function(error, result) {
+                    console.log(error,result);
+                });
+            }
+            //change to new data
             const newPic = req.body.newProfilePicURL;
-            user.profilePic = newPic;
+            user.profilePic = {url:newPic,public_id:req.body.publicID};
             user.save();
             res.json({message:"Picture Uploaded!",type:"success",success:true,image:newPic});
             req.session.user.profilePic = newPic;
