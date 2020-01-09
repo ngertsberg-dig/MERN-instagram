@@ -4,6 +4,7 @@ import Modal from '../Modals/Modal';
 import Login from '../Login/Login';
 import SignUp from '../SignUp/SignUp';
 import Navigation from './Navigation/Navigation';
+import ProfilePicCrop from '../PhotoCrop/ProfilePicCrop';
 
 function popupModal(e){
     const button = e.target;
@@ -15,16 +16,19 @@ function popupModal(e){
 const HeaderNav =  (props) =>{
     const {user} = props;
     return(
-        <div id = 'HeaderNav'>
-            <div className = 'user-header'>
-                {user == null ? <LoginScreen LoginUser = {props.LoginUser} RegisterUser = {props.RegisterUser} /> : <UserLogged user = {user} logout = {props.logout} />}
-            </div>
-            {user == null? null :
-                <div className = 'navigation'>
-                    <Navigation />
+        <React.Fragment>
+            <div id = 'HeaderNav'>
+                <div className = 'user-header'>
+                    {user == null ? <LoginScreen LoginUser = {props.LoginUser} RegisterUser = {props.RegisterUser} /> : <UserLogged user = {user} logout = {props.logout} />}
                 </div>
-            }
-        </div>
+                {user == null? null :
+                    <div className = 'navigation'>
+                        <Navigation />
+                    </div>
+                }
+            </div>
+            {user == null ? null : <Modal name='change-profile-pic'><ProfilePicCrop changeUserPic = {props.changeProfilePic} user = {user} /></Modal>}
+        </React.Fragment>
     )
 }
 
@@ -47,10 +51,20 @@ const LoginScreen = (props) =>{
 
 const UserLogged = (props) =>{
     const { user } = props;
+    function profilePicCropActivate(){
+        document.querySelector(".modal.modal-change-profile-pic").classList.add("active");
+    }
     return(
         <div className = 'user-logged-in'>
-            <p className = 'user-name'>{user.name}</p>
-            <p className = 'logout' onClick={props.logout}>Logout</p>
+            <div className = 'left-side'>
+                <div className = 'profile-pic'>
+                    <img onClick = {profilePicCropActivate} src = {user.profilePic} alt = 'profile-pic'/>
+                </div>
+            </div>
+            <div className = 'right-side'>
+                <p className = 'user-name'>{user.name}</p>
+                <p className = 'logout' onClick={props.logout}>Logout</p>
+            </div>
         </div>
     )
 }

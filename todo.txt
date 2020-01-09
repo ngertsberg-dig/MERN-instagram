@@ -1,4 +1,10 @@
 bcrypt sign up passwords
 refactor <App>... way too much code in it
-Image uploads with cloudinary
+upload to cloudinary seperate folder
 Make a not ugly design :P
+make a .env file for database connection and cloudinary api keys..
+
+
+done:
+Image uploads with cloudinary
+in client/src/components/PhotoCrop/ProfilePicCrop when a user uploads a new profile pic it forces the window to refresh with to catch the updated image... find a way to change the state instead..

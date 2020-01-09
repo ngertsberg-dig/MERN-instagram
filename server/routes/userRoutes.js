@@ -16,6 +16,6 @@ router.route("/removeFollowing").post(userController.removeFollowing);
 
 router.route("/getAllUserFollowing").post(userController.getAllUserFollowing);
 
-router.route("/uploadImage").post(userController.uploadProfileImage);
+router.route("/uploadImage").post(userController.uploadProfileImage,userController.changeProfilePic);
 
 module.exports = router;

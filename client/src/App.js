@@ -14,10 +14,10 @@ class App extends React.Component {
       user: null
     }
 
-    this.state={
-      user: {"following":[{"_id":"5e14f48e9421bd2299e2e6fe"}],"_id":"5e14f1f9fead0c220f2a006d","name":"nickey22","email":"gertsberg@hotmail.com","password":"gunit2","__v":5}
-    }
-
+    // this.state={
+    //   user: {"following":[],"_id":"5e16708cd304e70dbd073fcc","name":"nickey22","email":"gertsberg","password":"gunit2","profilePic":"https://res.cloudinary.com/dfm327szl/image/upload/v1578528727/Default%20Images/user_dkmmxa.png","__v":0}
+    // }
+    this.changeUserProfilePicState = this.changeUserProfilePicState.bind(this);
     this.logoutUser = this.logoutUser.bind(this);
   }
   async registerUser(e){
@@ -73,7 +73,6 @@ class App extends React.Component {
         user: null
       })
     }
-
   }
   async componentDidMount(){
     const res = await fetch("/api/user/checkIfLogged");
@@ -88,12 +87,22 @@ class App extends React.Component {
     }
   }
   
+  changeUserProfilePicState(newPic){
+    if(this.state.user){
+      const newUserObject = this.state.user;
+      newUserObject.profilePic = newPic;
+      console.log(newUserObject);
+      this.setState({
+        user: newUserObject
+      })
+    }
+  }
 
   render(){
     return (
       <div id = "App" className="App">
         <Router>
-          <HeaderNav LoginUser = {(e)=>this.loginUser(e)} RegisterUser = {(e)=>this.registerUser(e)} user = {this.state.user} logout = {this.logoutUser} />
+          <HeaderNav changeProfilePic = {this.changeUserProfilePicState} LoginUser = {(e)=>this.loginUser(e)} RegisterUser = {(e)=>this.registerUser(e)} user = {this.state.user} logout = {this.logoutUser} />
           <Pages state = {this.state}/>
           <Notification />
         </Router>
