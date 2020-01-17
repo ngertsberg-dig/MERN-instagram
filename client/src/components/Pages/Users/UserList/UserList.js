@@ -6,7 +6,7 @@ const UserList = (props) =>{
     const userListHTML = 
         props.userFollowingList.userListExcludeCurrent.map((el,index)=>{
             const loopUserId = el._id;
-            if(loopUserId != props.currentUser._id){
+            if(loopUserId !== props.currentUser._id){
                 let currentUserFollowing = false;
                 props.userFollowingList.currentUserFollowers.forEach(el=>{
                     const userFollowing = el._id;
@@ -21,6 +21,7 @@ const UserList = (props) =>{
                     return <User currentUser = {props.currentUser} key = {index} following = {false} user = {el} name = {el.name} />
                 }
             }
+            return 0;
         })
     return(
         <div className = "user-following-list">

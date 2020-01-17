@@ -3,6 +3,9 @@ import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import './ProfilePicCrop.sass';
 import { notificationPopup } from '../../helpers/helper';
+import * as actions from '../../domains/user/actions';
+import { connect } from 'react-redux';
+
 class ProfilePicCrop extends React.Component{
     state = {
         src: null,
@@ -90,7 +93,7 @@ class ProfilePicCrop extends React.Component{
           }, 'image/jpeg');
         });
         
-      }
+      } 
 
       //change user profile pic
       async submitProfilePic(){
@@ -104,15 +107,14 @@ class ProfilePicCrop extends React.Component{
             const res = await fetch("/api/user/uploadImage",{method:"POST",headers:headerToSend,body:JSON.stringify({profilePic:dataURL,userID})});
             const data = await res.json();
             if(data.success){
-              this.props.changeUserPic(data.image);
-              console.log(data.image);
+              this.props.changeUserPic({ newPic:data.image, userObject:this.props.user });
               document.querySelector(".modal.modal-change-profile-pic.active").classList.remove("active");
-              notificationPopup(data.type,data.message);
+              notificationPopup(data.message,data.type);
             }
           });
         }
         else{
-          notificationPopup("error","Please select an image!");
+          notificationPopup("Please select an image!","error");
         }
       }
 
@@ -124,7 +126,7 @@ class ProfilePicCrop extends React.Component{
 
 
     render(){
-        const { crop, croppedImageUrl, src } = this.state;
+        const { crop, src } = this.state;
         return (
           <div id="ProfilePicCrop">
             <p>Select an image to replace profile pic.</p>
@@ -150,4 +152,12 @@ class ProfilePicCrop extends React.Component{
     }
 }
 
-export default ProfilePicCrop;
+const mapStateToProps = state => ({
+  user: state.UserReducer.user
+})
+
+const mapDispatchToProps = dispatch => ({
+  changeUserPic: payload => dispatch(actions.newUserPicUploaded(payload))
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(ProfilePicCrop);

@@ -14,7 +14,7 @@ exports.signUpUser = (req,res,next) =>{
         if(err) throw err;
         if(user != null){
             res.status(401); 
-            res.json("Username is taken");
+            res.json({ message:"Username is taken!",type:"error" });
         }
         else{
             next();
@@ -28,7 +28,7 @@ exports.saveUserIntoDB = (req,res) => {
     const newUser = new User({name,email,password,profilePic:{url:defaultProfilePicLink,public_id:0}});
     newUser.save().then(()=>{
         res.status(200);
-        res.json("User created successfully")
+        res.json({ message:"User created successfully",type:"success" })
     });
 }
 
@@ -43,21 +43,21 @@ exports.loginValidation = (req,res) =>{
         //success
         else{
             req.session.user = user;
-            res.json({user, message:"Succesfully logged in.",type:"success"});
+            res.json({ user, message:"Succesfully logged in.",type:"success" });
         }
     })
 }
 
 exports.checkIfLogged = (req,res) =>{
     if(req.session.user == undefined){
-        res.json({message:"No user logged",success:false});
+        res.json({ message:"No user logged",success:false });
     }
     else{
         const loggedInUserID = req.session.user._id;
         User.findOne({_id:loggedInUserID},(err,user)=>{
             if(err) throw err;
             if(user != null){
-                res.json({user, message:"Signed in user!",success:true});
+                res.json({ user, message:"Signed in user!",success:true });
             }
             else{
                 console.log("couldnt find user :(");
@@ -70,7 +70,7 @@ exports.checkIfLogged = (req,res) =>{
 
 exports.logout = (req,res) =>{
     req.session.user = undefined;
-    res.json({message:"Successfully logged out",success:true,type:"success"});
+    res.json({ message:"Successfully logged out",success:true,type:"success" });
 }
 
 exports.addFollowing = (req,res)=>{
@@ -82,14 +82,14 @@ exports.addFollowing = (req,res)=>{
             if(!alreadyFollowing){
                 user.following.push({ _id: followingUserId });
                 user.save();
-                res.json({message:"User Followed!",type:"success",success:true});
+                res.json({ message:"User Followed!",type:"success",success:true });
             }
             else{
-                res.json({message:"Already following User!",type:"error",success:false})
+                res.json({ message:"Already following User!",type:"error",success:false })
             }
         }
         else{
-            res.json({message:"Failed to find current user!",type:"error",success:false})
+            res.json({ message:"Failed to find current user!",type:"error",success:false })
         }
     })
 }
@@ -149,10 +149,8 @@ exports.changeProfilePic = (req,res) =>{
             //remove old data
             const oldImage = user.profilePic.public_id;
             if(parseInt(oldImage) != 0){
-                console.log('destroying old image..');
-                cloudinary.uploader.destroy(oldImage, function(error, result) {
-                    console.log(error,result);
-                });
+                //not using default image so destroy old image from CDN
+                cloudinary.uploader.destroy(oldImage, function(error, result) { console.log(error,result); });
             }
             //change to new data
             const newPic = req.body.newProfilePicURL;

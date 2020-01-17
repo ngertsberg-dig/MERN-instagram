@@ -5,6 +5,10 @@ import Login from '../Login/Login';
 import SignUp from '../SignUp/SignUp';
 import Navigation from './Navigation/Navigation';
 import ProfilePicCrop from '../PhotoCrop/ProfilePicCrop';
+import UserLogged from './UserLogged';
+import { connect } from 'react-redux';
+
+import * as actions from '../../domains/user/actions';
 
 function popupModal(e){
     const button = e.target;
@@ -13,24 +17,42 @@ function popupModal(e){
         modalPopup.classList.add("active");
     }
 }
-const HeaderNav =  (props) =>{
-    const {user} = props;
-    return(
-        <React.Fragment>
-            <div id = 'HeaderNav'>
-                <div className = 'user-header'>
-                    {user == null ? <LoginScreen LoginUser = {props.LoginUser} RegisterUser = {props.RegisterUser} /> : <UserLogged user = {user} logout = {props.logout} />}
-                </div>
-                {user == null? null :
-                    <div className = 'navigation'>
-                        <Navigation />
+
+class HeaderNav extends React.Component{
+    componentDidMount(){
+        this.props.checkIfLogged();
+    }
+    render(){
+        const { user } = this.props;
+        return(
+            <React.Fragment>
+                <div id = 'HeaderNav'>
+                    <div className = 'user-header'>
+                        {user == null ? 
+                            <LoginScreen /> 
+                        : 
+                            <UserLogged />
+                        }
                     </div>
-                }
-            </div>
-            {user == null ? null : <Modal name='change-profile-pic'><ProfilePicCrop changeUserPic = {props.changeProfilePic} user = {user} /></Modal>}
-        </React.Fragment>
-    )
+                    {user == null? null :
+                        <div className = 'navigation'>
+                            <Navigation />
+                        </div>
+                    }
+                </div>
+                {user == null ? null : <Modal name='change-profile-pic'><ProfilePicCrop /></Modal>}
+            </React.Fragment>
+        )
+    }
 }
+
+const mapStateToProps = state => ({
+    user: state.UserReducer.user
+})
+
+const mapDispatchToProps = dispatch => ({
+    checkIfLogged: () => dispatch(actions.checkIfLogged())
+})
 
 const LoginScreen = (props) =>{
     return(
@@ -43,29 +65,11 @@ const LoginScreen = (props) =>{
                     <button onClick = {(e)=>popupModal(e)} id = 'signUp' data-modal = 'sign-up'>Sign up</button>
                 </div>
             </div>
-            <Modal name='login'><Login LoginUser = {props.LoginUser} /></Modal>
-            <Modal name = 'sign-up'><SignUp RegisterUser = {props.RegisterUser} /></Modal>
+            <Modal name='login'><Login /></Modal>
+            <Modal name = 'sign-up'><SignUp /></Modal>
         </React.Fragment>
     )
 }
 
-const UserLogged = (props) =>{
-    const { user } = props;
-    function profilePicCropActivate(){
-        document.querySelector(".modal.modal-change-profile-pic").classList.add("active");
-    }
-    return(
-        <div className = 'user-logged-in'>
-            <div className = 'left-side'>
-                <div className = 'profile-pic'>
-                    <img onClick = {profilePicCropActivate} src = {user.profilePic.url} alt = 'profile-pic'/>
-                </div>
-            </div>
-            <div className = 'right-side'>
-                <p className = 'user-name'>{user.name}</p>
-                <p className = 'logout' onClick={props.logout}>Logout</p>
-            </div>
-        </div>
-    )
-}
-export default HeaderNav;
+
+export default connect(mapStateToProps,mapDispatchToProps)(HeaderNav);

@@ -2,7 +2,7 @@
 import TweenMax from 'gsap';
 import { Power4 } from 'gsap/gsap-core';
 
-export function notificationPopup(status,message){
+export function notificationPopup(message,status){
     const notification = document.querySelector("#notification");
     if(!notification.classList.contains("active")){
         notification.classList.add(status,"active");
@@ -21,7 +21,7 @@ export function notificationPopup(status,message){
         console.log(checkClass);
         if(!checkClass){
             clearInterval(keepChecking);
-            notificationPopup(status,message);
+            notificationPopup(message,status);
         }
         },1000);
     }
