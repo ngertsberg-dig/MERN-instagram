@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const PORT = process.env.port || 8080;
 
 const UserRoutes = require("./routes/userRoutes");
+const PostRoutes = require("./routes/postRoutes");
 
 mongoose.connect('mongodb://nickey22:gunit2@ds259878.mlab.com:59878/user-login',
     {useNewUrlParser:true,useUnifiedTopology: true})
@@ -28,11 +29,11 @@ app.use(session({
 }));
 
 app.use("/api/user/",UserRoutes);
-
+app.use("/api/post/",PostRoutes);
 
 
 app.get("/",(req,res)=>{
-    res.send("hello e");
+    res.send("homepage render");
 })
 app.listen(PORT,function(){
     console.log(`listening on port ${PORT}`);

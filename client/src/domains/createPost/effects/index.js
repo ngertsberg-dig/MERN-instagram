@@ -1,8 +1,15 @@
 import * as actions from '../actions';
-
-const submitCreatePost = ( store, { type, post }) => {
+const headers = {
+    "Accept":"application/json",
+    "Content-Type":"application/json"
+}
+const submitCreatePost = async ( store, { type, post }) => {
     if(type === actions.SUBMIT_CREATE_POST){
-        console.log(`[Submiting Post] ${JSON.stringify(post)}`);
+        const data = await fetch("/api/post/createPost",{
+            headers,
+            method:"POST",
+            body: JSON.stringify(post)
+        })
     }
 }
 
