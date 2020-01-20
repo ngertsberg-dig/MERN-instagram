@@ -4,11 +4,11 @@ import User from './User/User';
 const UserList = (props) =>{
     //map all users into and mark them as either not being followed or followed..
     const userListHTML = 
-        props.userFollowingList.userListExcludeCurrent.map((el,index)=>{
+        props.allUsers.map((el,index)=>{
             const loopUserId = el._id;
             if(loopUserId !== props.currentUser._id){
                 let currentUserFollowing = false;
-                props.userFollowingList.currentUserFollowers.forEach(el=>{
+                props.currentUserFollowing.forEach(el=>{
                     const userFollowing = el._id;
                     if(loopUserId === userFollowing){
                         currentUserFollowing = true;

@@ -9,10 +9,27 @@ cloudinary.config({
 
 exports.createPost = (req,res) => {
     const dateCreated = new Date();
-    const { postTitle, postContent } = req.body;
-    const numOfLikes = 0;
-    const newPost = new Post({ postTitle, postContent, dateCreated });
-    newPost.save().then(()=>{
-        console.log("post created");
-    })
-}
+    const { postTitle, postContent, postImage, user } = req.body;
+    const userID = user._id;
+    const userName = user.name;
+    if(postImage){
+        cloudinary.uploader.upload(postImage,{ overwrite: true,  public_id: `${userName}/posts/${new Date()}` }, function(error,result){
+            if(!error){
+                const postImagePublicId = result.public_id;
+                const postImage = result.url;
+                const newPost = new Post({ postTitle, postContent, dateCreated, userID, userName, postImagePublicId, postImage  });
+                newPost.save().then(()=>{
+                    res.json({ message: "Uploaded post succesfully!", type:"success" })
+                });
+            }else{
+                console.log(error);
+                res.json({ message: "something went wrong :(", type:"error" })
+            }
+        })
+    }else{
+        const newPost = new Post({ postTitle, postContent, dateCreated, userID, userName  });
+        newPost.save().then(()=>{
+            res.json({ message: "Uploaded post succesfully!", type:"success" })
+        })
+    }
+}   

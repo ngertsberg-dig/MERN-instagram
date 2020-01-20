@@ -1,52 +1,40 @@
 import React from 'react';
-import NotLoggedInError from '../../NotLoggedInError';
 import UserList from './UserList/UserList';
+import { connect } from 'react-redux';
+import PageView from '../../Layout/PageView';
+import * as actions from '../../../domains/user/actions';
 
 class Users extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            user: props.state.user,
-            userFollowingList: null
-        }
-    }
+
     async componentDidMount(){
-        console.log(this.state.user)
-        if(this.state.user != null){
-            const res = await fetch("/api/user/getAllUserFollowing",{
-                headers:{
-                    "Accept":"application/json",
-                    "Content-Type":"application/json"
-                },
-                method:"POST",
-                body:JSON.stringify({currentUser: this.state.user._id})
-            })
-            const userFollowingList = await res.json();
-            this.setState({ userFollowingList });
-            console.log(userFollowingList);
-        }
+        this.props.getUserFollowing(this.props.user._id);
     }
     render(){
         let userList;
-        if(this.state.user == null){
-            userList = <NotLoggedInError />
+        if(this.props.userListExcludeCurrent){
+            userList = <UserList currentUser = {this.props.user} currentUserFollowing = {this.props.currentUserFollowing} allUsers = {this.props.userListExcludeCurrent} />;
         }
         else{
-            if(this.state.userFollowingList == null){
-                userList = null;
-            }
-            else{
-                userList = <UserList currentUser = {this.state.user} userFollowingList = {this.state.userFollowingList} />
-            }
+            userList = null;
         }
         return(
-            <div className = 'page-view users'>
+            <PageView class = 'users'>
                 <div className = 'wrapper'>
-                    {userList}
+                   {userList}
                 </div>
-            </div>
+            </PageView>
         )
     }
 }
 
-export default Users;
+const mapStateToProps = state => ({
+    user: state.UserReducer.user,
+    userListExcludeCurrent: state.UserReducer.userListExcludeCurrent,
+    currentUserFollowing: state.UserReducer.currentUserFollowing
+})
+
+const mapDispatchToProps = dispatch => ({
+    getUserFollowing: userID => dispatch(actions.getUserFollowing(userID))
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(Users);

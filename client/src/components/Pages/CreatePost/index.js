@@ -27,7 +27,7 @@ class CreatePost extends React.Component{
     createPostSubmit(){
         const postTitle = document.querySelector(".post-title textarea").value;
         const postContent = document.querySelector(".post-content textarea").value;
-        const post = { postTitle, postContent, postImage: this.state.hasImage ? this.state.postImage : null}
+        const post = { postTitle, postContent, postImage: this.state.hasImage ? this.state.postImage : null, user: this.props.user }
         this.props.submitPost(post);
     }
 
@@ -51,9 +51,12 @@ class CreatePost extends React.Component{
     }
 }
 
+const mapStateToProps = state => ({
+    user: state.UserReducer.user
+})
 
 const mapDispatchToProps = dispatch => ({
     submitPost: post => dispatch(actions.submitCreatePost(post))
 })
 
-export default connect(null,mapDispatchToProps)(CreatePost);
+export default connect(mapStateToProps,mapDispatchToProps)(CreatePost);

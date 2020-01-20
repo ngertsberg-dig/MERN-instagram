@@ -8,8 +8,9 @@ const PORT = process.env.port || 8080;
 
 const UserRoutes = require("./routes/userRoutes");
 const PostRoutes = require("./routes/postRoutes");
-
-mongoose.connect('mongodb://nickey22:gunit2@ds259878.mlab.com:59878/user-login',
+require('dotenv').config();
+// mongodb://nickey22:gunit2@ds259878.mlab.com:59878/user-login
+mongoose.connect(process.env.MONGO_URL,
     {useNewUrlParser:true,useUnifiedTopology: true})
     .then(()=>console.log("connected to mongoose"))
     .catch(error=>handleError(error));

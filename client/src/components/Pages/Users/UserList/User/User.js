@@ -10,10 +10,10 @@ async function followButtonClicked(following,followingUserId,currentUser){
         const data = await res.json();
         if(data.success){
             console.log("successfully unfollowed!");
-            notificationPopup(data.type,data.message);
+            notificationPopup(data.message,data.type);
             return 1;
         }else{
-            notificationPopup(data.type,data.message);    
+            notificationPopup(data.message,data.type);    
             return 0;
         };
     }else{
@@ -22,10 +22,10 @@ async function followButtonClicked(following,followingUserId,currentUser){
         const data = await res.json();
         if(data.success){
             console.log('successfully followed!');
-            notificationPopup(data.type,data.message);
+            notificationPopup(data.message,data.type);
             return 1;
         }else{
-            notificationPopup(data.type,data.message);    
+            notificationPopup(data.message,data.type);    
             return 0;
         };
     }

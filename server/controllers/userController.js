@@ -120,9 +120,9 @@ exports.getAllUserFollowing = (req,res) =>{
     const { currentUser } = req.body;
     User.find({},(err,user)=>{
         if(err) throw err;
-        const userListExcludeCurrent = user.filter(el=>el._id !== currentUser);
-        const currentUserFollowers = user.find(el=>el._id == currentUser).following;
-        res.json({ userListExcludeCurrent, currentUserFollowers });
+        const userListExcludeCurrent = user.filter(el=>el._id != currentUser);
+        const currentUserFollowing = user.find(el=>el._id == currentUser).following;
+        res.json({ userListExcludeCurrent, currentUserFollowing });
     })
 }
 

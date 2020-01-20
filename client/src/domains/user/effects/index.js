@@ -65,10 +65,27 @@ const newUserPicUploaded = ( store, { type, payload }) => {
         store.dispatch(actions.updateUserState(newObject));
     }
 }
+
+const getAllUserFollowing = async ( store, { type, userID }) =>{
+    if(type === actions.GET_USER_FOLLOWING){
+        const res = await fetch("/api/user/getAllUserFollowing",{
+            headers:{
+                "Accept":"application/json",
+                "Content-Type":"application/json"
+            },
+            method:"POST",
+            body:JSON.stringify({currentUser: userID})
+        })
+        const data = await res.json();
+        store.dispatch(actions.returnUserFollowing(data));
+    }
+}
+
 export default [
     checkIfLogged,
     logoutUserServer,
     loginUser,
     registerUser,
-    newUserPicUploaded
+    newUserPicUploaded,
+    getAllUserFollowing
 ];
