@@ -1,4 +1,5 @@
 const Post = require("../models/postModels");
+const User = require("../models/usersModels");
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({ 
@@ -20,7 +21,7 @@ exports.createPost = (req,res) => {
                 const newPost = new Post({ postTitle, postContent, dateCreated, userID, userName, postImagePublicId, postImage  });
                 newPost.save().then(()=>{
                     res.json({ message: "Uploaded post succesfully!", type:"success" })
-                });
+                }); 
             }else{
                 console.log(error);
                 res.json({ message: "something went wrong :(", type:"error" })
@@ -33,3 +34,20 @@ exports.createPost = (req,res) => {
         })
     }
 }   
+
+
+exports.getUserListPosts = (req,res) => {
+    const userID = req.body.userID;
+    User.findOne({ "_id": userID },async (err,user)=>{
+        if(err) throw err;
+        if(user){
+            const userFollowingList = user.following;
+            const posts = await Post.find({ userID: {$in: userFollowingList}},(err,post)=>{})
+            res.json({ posts });
+        }
+    })
+    
+
+
+
+}

@@ -81,11 +81,27 @@ const getAllUserFollowing = async ( store, { type, userID }) =>{
     }
 }
 
+const getUserFollowingPosts = async (store, { type, userID }) => {
+    if(type === actions.GET_USER_FOLLOWING_POSTS){
+        const data = await fetch("/api/post/getfollowingposts",{
+            method:"POST",
+            headers:{
+                "Accept":"application/json",
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({ userID })
+        })
+        const res = await data.json();
+        store.dispatch(actions.setUserFollowingPosts(res));
+    }
+}
+
 export default [
     checkIfLogged,
     logoutUserServer,
     loginUser,
     registerUser,
     newUserPicUploaded,
-    getAllUserFollowing
+    getAllUserFollowing,
+    getUserFollowingPosts
 ];

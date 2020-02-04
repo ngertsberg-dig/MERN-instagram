@@ -8,6 +8,8 @@ export const NEW_USER_PIC_UPLOADED = "NEW_USER_PIC_UPLOADED";
 export const UPDATE_USER_STATE = "UPDATE_USER_STATE";
 export const GET_USER_FOLLOWING = "GET_USER_FOLLOWING";
 export const RETURN_USER_FOLLOWING = "RETURN_USER_FOLLOWING";
+export const GET_USER_FOLLOWING_POSTS = "GET_USER_FOLLOWING_POSTS";
+export const SET_USER_FOLLOWING_POSTS = "SET_USER_FOLLOWING_POSTS"; 
 
 export const updateUserState = user => ({ type:UPDATE_USER_STATE, user });
 export const checkIfLogged = () => ({ type:CHECK_IF_LOGGED });
@@ -19,3 +21,5 @@ export const registerUserAttempt = FormValues => ({ type:REGISTER_USER_ATTEMPT, 
 export const newUserPicUploaded = payload => ({ type:NEW_USER_PIC_UPLOADED, payload });
 export const getUserFollowing = userID => ({ type:GET_USER_FOLLOWING , userID });
 export const returnUserFollowing = payload => ({ type:RETURN_USER_FOLLOWING, payload });
+export const getUserFollowingPosts = userID => ({ type: GET_USER_FOLLOWING_POSTS, userID });
+export const setUserFollowingPosts = posts => ({ type: SET_USER_FOLLOWING_POSTS, posts });
